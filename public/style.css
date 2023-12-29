@@ -1,0 +1,95 @@
+@keyframes arrow-up-animation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes arrow-right-animation {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes arrow-down-animation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.arrow-animate-up {
+  animation: arrow-up-animation 1s;
+  animation-iteration-count: 1;
+}
+
+.arrow-animate-right {
+  animation: arrow-right-animation 1s;
+  animation-iteration-count: 1;
+}
+
+.arrow-animate-down {
+  animation: arrow-down-animation 1s;
+  animation-iteration-count: 1;
+}
+.arrow-animate-up,
+.arrow-animate-right,
+.arrow-animate-down {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.custom-p-style {
+  font-weight: bold;
+}
+.widget-user-header {
+  background-color: #193db0 !important;
+  color: white !important;
+}
+.widget-user-username {
+  font-weight: bolder !important;
+}
+.description-header {
+  color: #193db0 !important;
+}
+
+.btn {
+  background-color: #193db0 !important;
+}
+
+.btn:hover {
+  background-color: #061f6f !important;
+}
+.float-right {
+  color: #193db0;
+}
+.card-primary.card-outline {
+  border-top: 3px solid #193db0;
+}
+.card-primary.card-header {
+  color: #193db0;
+}
+
+.main-sidebar {
+  background-color: #14265f !important;
+  color: white !important;
+}
+.brand-text {
+  color: white !important;
+}

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Bootstrap 4 -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AdminLTE CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.min.css"
+      integrity="sha512-IuO+tczf4J43RzbCMEFggCWW5JuX78IrCJRFFBoQEXNvGI6gkUw4OjuwMidiS4Lm9Q2lILzpJwZuMWuSEeT9UQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"
+      integrity="sha512-KBeR1NhClUySj9xBB0+KRqYLPkM6VvXiiWaSz/8LCQNdRpUm38SWUrj0ccNDNSkwCD9qPA4KobLliG26yPppJA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css"
+    />
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
+    <title>LC Waikiki</title>
+
+    <script>
+      $(document).ready(function () {
+        function updatePersonelTable() {
+          $.ajax({
+            url: "http://localhost:3000/api/getTakimPerformans",
+            type: "GET",
+            success: function (response) {
+              $("#personelTableBody").empty();
+
+              var maxPerformansUrun = Math.max(
+                ...response.map((p) => p.urun_genel_performans_toplam)
+              );
+              var minPerformansUrun = Math.min(
+                ...response.map((p) => p.urun_genel_performans_toplam)
+              );
+
+              var maxPerformansTur = Math.max(
+                ...response.map((p) => p.tur_genel_performans_toplam)
+              );
+              var minPerformansTur = Math.min(
+                ...response.map((p) => p.tur_genel_performans_toplam)
+              );
+
+              response.forEach(function (getTakimPerformans) {
+                // Performansı yüzde olarak hesapla
+                var performansYuzdeUrun =
+                  ((getTakimPerformans.urun_genel_performans_toplam -
+                    minPerformansUrun) /
+                    (maxPerformansUrun - minPerformansUrun)) *
+                  100;
+                var performansYuzdeTur =
+                  ((getTakimPerformans.tur_genel_performans_toplam -
+                    minPerformansTur) /
+                    (maxPerformansTur - minPerformansTur)) *
+                  100;
+
+                var performansOrtalamasi =
+                  (performansYuzdeUrun + performansYuzdeTur) / 2;
+
+                var primAlmaSansi =
+                  performansOrtalamasi > 70
+                    ? '<i class="fas fa-arrow-up text-success arrow-animate-up"></i>'
+                    : performansOrtalamasi > 30
+                    ? '<i class="fas fa-arrow-right text-warning arrow-animate-right"></i>'
+                    : '<i class="fas fa-arrow-down text-danger arrow-animate-down"></i>';
+
+                var geriBildirimDuzeyi =
+                  performansOrtalamasi < 20
+                    ? '<i class="fas fa-arrow-up text-success arrow-animate-up"></i>'
+                    : performansOrtalamasi < 60
+                    ? '<i class="fas fa-arrow-right text-warning arrow-animate-right"></i>'
+                    : '<i class="fas fa-arrow-down text-danger arrow-animate-down"></i>';
+
+                // Toplaması gereken ürün miktarını yüzde olarak hesapla
+                // Toplaması gereken ürün miktarını yüzde olarak hesapla
+                // Toplaması gereken ürün miktarını yüzde olarak hesapla
+                var toplamasiGerekenUrunMiktari = 250000;
+                var toplananUrunMiktariYuzde =
+                  getTakimPerformans.urun_genel_performans_toplam
+                    ? (getTakimPerformans.urun_genel_performans_toplam /
+                        toplamasiGerekenUrunMiktari) *
+                      100
+                    : 0;
+                var yapilmasıGerekenTurMiktari = 7500;
+                var yapilanTurMiktariYuzde =
+                  getTakimPerformans.tur_genel_performans_toplam
+                    ? (getTakimPerformans.tur_genel_performans_toplam /
+                        yapilmasıGerekenTurMiktari) *
+                      100
+                    : 0;
+
+                var toplananUrunMiktariDuzeyi =
+                  toplananUrunMiktariYuzde > 180
+                    ? '<i class="fas fa-arrow-up text-success arrow-animate-up"></i>' // Çok iyi
+                    : toplananUrunMiktariYuzde >= 125
+                    ? '<i class="fas fa-arrow-right text-success arrow-animate-right"></i>' // İyi
+                    : toplananUrunMiktariYuzde >= 85
+                    ? '<i class="fas fa-arrow-right text-warning arrow-animate-right"></i>' // Orta
+                    : '<i class="fas fa-arrow-down text-danger arrow-animate-down"></i>'; // Kötü
+                var yapılanTurMiktariDuzeyi =
+                  yapilanTurMiktariYuzde > 180
+                    ? '<i class="fas fa-arrow-up text-success arrow-animate-up"></i>' // Çok iyi
+                    : yapilanTurMiktariYuzde >= 125
+                    ? '<i class="fas fa-arrow-right text-success arrow-animate-right"></i>' // İyi
+                    : yapilanTurMiktariYuzde >= 85
+                    ? '<i class="fas fa-arrow-right text-warning arrow-animate-right"></i>' // Orta
+                    : '<i class="fas fa-arrow-down text-danger arrow-animate-down"></i>'; // Kötü
+                $("#personelTableBody").append(`
+                  <tr>
+                    <th scope="row"><a class="nav-link" href="/takim_gelecek_analizi.html?takim_id=${getTakimPerformans.takim_id}">${getTakimPerformans.takim_id}</a></th>
+                      <td>${getTakimPerformans.takim_ad}</td>
+                      <td>%${getTakimPerformans.urun_genel_performans_toplam}</td>
+                      <td>%${getTakimPerformans.tur_genel_performans_toplam}</td>
+                      <td>${primAlmaSansi}</td>
+                      <td>${geriBildirimDuzeyi}</td>
+                      <td>${toplananUrunMiktariDuzeyi}</td>
+                      <td>${yapılanTurMiktariDuzeyi}</td>
+
+
+                  </tr>
+                `);
+              });
+              $("#personelTable").DataTable({
+                pageLength: 10,
+              });
+            },
+
+            error: function (error) {
+              console.error(error);
+              alert("Programlar verileri getirme hatası");
+            },
+          });
+        }
+
+        updatePersonelTable();
+      });
+    </script>
+  </head>
+  <body
+    class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed"
+  >
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="/index.html" class="brand-link text-center">
+        <span class="brand-text">LC Waikiki</span>
+      </a>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar User Panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex justify-content-center">
+          <div class="image">
+            <img
+              src="/52.jpg"
+              class="img-circle elevation-2"
+              alt="User Image"
+              class="admin_img"
+            />
+          </div>
+          <div class="info">
+            <a href="#" class="d-block"></a>
+          </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul
+            class="nav nav-pills nav-sidebar flex-column"
+            data-widget="treeview"
+            role="menu"
+            data-accordion="false"
+          >
+            <!-- Rezervasyon Accordion -->
+            <li class="nav-item has-treeview mb-3">
+              <a href="/urun_performans_goruntule.html" class="nav-link">
+                <i class="nav-icon fa-solid fa-shirt"></i>
+                <p>Ürün Performansı</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview mb-3">
+              <a href="/tur_performans_goruntule.html" class="nav-link">
+                <i class="nav-icon fa-solid fa-flag-checkered"></i>
+                <p>Tur Performansı</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview mb-3">
+              <a href="/takim_performans_goruntule.html" class="nav-link">
+                <i class="nav-icon fa-solid fa-people-group"></i>
+                <p>Takım Performansı</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview mb-3">
+              <a
+                href="/personelin_sahte_rapor_alma_analizi.html"
+                class="nav-link"
+              >
+                <i class="nav-icon fa-solid fa-hospital-user"></i>
+                <p>Personelin Sahte Rapor Alma Analizi</p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-12 text-center">
+              <h1>Takımların Ürün Ve Tur Sayısına Göre Performans Analizi</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row justify-content-center">
+            <div class="col-md-10">
+              <div class="card">
+                <div class="card-body p-4">
+                  <table
+                    class="table table-bordered table-hover"
+                    id="personelTable"
+                  >
+                    <thead>
+                      <tr>
+                        <th scope="col">Takım ID</th>
+                        <th scope="col">Takım Ad</th>
+                        <th scope="col">Takımın Genel Ürün Performansı</th>
+                        <th scope="col">Takımın Genel Tur Performansı</th>
+                        <th scope="col">Prim Alma Şansı</th>
+                        <th scope="col">Geri Bildirim Alma Düzeyi</th>
+                        <th scope="col">
+                          Toplaması Gereken Ürün Miktarı Düzeyi
+                        </th>
+                        <th scope="col">
+                          Yapılması Gereken Tur Miktarı Düzeyi
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="personelTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

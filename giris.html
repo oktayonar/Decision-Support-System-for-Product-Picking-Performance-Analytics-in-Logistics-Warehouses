@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- AdminLTE CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/admin-lte@3.1.0/dist/css/adminlte.min.css"
+    />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.1.0/dist/js/adminlte.min.js"></script>
+
+    <title>Giriş Sayfası</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-image: url("/depo-yonetimi-otomasyon.jpg");
+        /* Resmin yolunu belirtin */
+        background-size: cover;
+        /* Resmin ekranı kaplamasını sağlar */
+        background-position: center;
+        /* Resmin ortalanmasını sağlar */
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      .container {
+        background-color: rgba(255, 255, 255, 0.5); /* white with 50% opacity */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+        margin: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        box-sizing: border-box;
+        border: 3px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bu satırı ekleyin */
+        opacity: 0.8; /* Bu satırı ekleyin */
+      }
+      button {
+        background-color: #193db0;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      button:hover {
+        background-color: #193db0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Giriş Yap</h1>
+
+      <form onsubmit="event.preventDefault(); login();">
+        <label for="username">Ad Soyad:</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">Şifre:</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit">Giriş Yap</button>
+      </form>
+    </div>
+
+    <script>
+      function login() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        if (username == "Cemil Öztürk" && password == "123") {
+          window.location.href = "/index.html";
+        } else {
+          alert("Hatalı giriş yaptınız!");
+        }
+      }
+    </script>
+  </body>
+</html>

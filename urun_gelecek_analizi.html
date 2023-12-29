@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Bootstrap 4 -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AdminLTE CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.min.css"
+      integrity="sha512-IuO+tczf4J43RzbCMEFggCWW5JuX78IrCJRFFBoQEXNvGI6gkUw4OjuwMidiS4Lm9Q2lILzpJwZuMWuSEeT9UQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"
+      integrity="sha512-KBeR1NhClUySj9xBB0+KRqYLPkM6VvXiiWaSz/8LCQNdRpUm38SWUrj0ccNDNSkwCD9qPA4KobLliG26yPppJA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css"
+    />
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"
+    ></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+    <title>LC Waikiki</title>
+
+    <script>
+      $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var personel_id = urlParams.get("personel_id");
+        $.ajax({
+          url: "http://localhost:3000/api/getUrunGelecekAnalizi/" + personel_id,
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            if (response.success) {
+              var data = response.data;
+              $({ counter: 0 }).animate(
+                { counter: data.tahmini_6_ay_sonrasi_performans },
+                {
+                  duration: 2000,
+                  easing: "swing",
+                  step: function () {
+                    $("#sayi_6").text(Math.ceil(this.counter));
+                  },
+                }
+              );
+
+              $({ counter: 0 }).animate(
+                { counter: data.tahmini_12_ay_sonrasi_performans },
+                {
+                  duration: 2000,
+                  easing: "swing",
+                  step: function () {
+                    $("#sayi_12").text(Math.ceil(this.counter));
+                  },
+                }
+              );
+
+              $("#personel_ad_soyad").text(data.personel_ad_soyad);
+              $("#personel_id").text(data.personel_id);
+              $("#meslek").text(data.meslek_adi);
+              $("#personel_takim").text(data.takim_ad);
+            }
+          },
+          error: function (error) {
+            console.error(error);
+            alert("Verileri getirme hatası");
+          },
+        });
+      });
+    </script>
+  </head>
+  <body
+    class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed"
+  >
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="/index.html" class="brand-link text-center">
+        <span class="brand-text">LC Waikiki</span>
+      </a>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar User Panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex justify-content-center">
+          <div class="image">
+            <img
+              src="/52.jpg"
+              class="img-circle elevation-2"
+              alt="User Image"
+              class="admin_img"
+            />
+          </div>
+          <div class="info">
+            <a href="#" class="d-block"></a>
+          </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul
+            class="nav nav-pills nav-sidebar flex-column"
+            data-widget="treeview"
+            role="menu"
+            data-accordion="false"
+          >
+            <!-- Rezervasyon Accordion -->
+            <li class="nav-item has-treeview mb-3">
+              <a href="/urun_performans_goruntule.html" class="nav-link">
+                <i class="nav-icon fa-solid fa-shirt"></i>
+                <p>Ürün Performansı</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview mb-3">
+              <a href="/tur_performans_goruntule.html" class="nav-link">
+                <i class="nav-icon fa-solid fa-flag-checkered"></i>
+                <p>Tur Performansı</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview mb-3">
+              <a href="/takim_performans_goruntule.html" class="nav-link">
+                <i class="nav-icon fa-solid fa-people-group"></i>
+                <p>Takım Performansı</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview mb-3">
+              <a
+                href="/personelin_sahte_rapor_alma_analizi.html"
+                class="nav-link"
+              >
+                <i class="nav-icon fa-solid fa-hospital-user"></i>
+                <p>Personelin Sahte Rapor Alma Analizi</p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-12 text-center">
+              <h1>İstatistikler</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <!-- Statistic Cards -->
+          <div class="row align-items-center">
+            <div class="col-lg-4 col-4">
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <p class="custom-p-style" id="personel_ad_soyad_6">
+                    Gelecek 6 Ay Sonraki Tahmini Ürün Miktar Performansı
+                  </p>
+                  <h3 id="sayi_6"></h3>
+                </div>
+                <div class="icon">
+                  <i class="fa-solid fa-chart-column"></i>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-4">
+              <div class="card card-widget widget-user">
+                <div class="widget-user-header">
+                  <h3 class="widget-user-username" id="personel_ad_soyad"></h3>
+                </div>
+                <div class="widget-user-image">
+                  <img
+                    class="img-circle elevation-2"
+                    src="/Admin.png"
+                    alt="User Avatar"
+                  />
+                </div>
+                <div class="card-footer">
+                  <div class="row">
+                    <div class="col-sm-4 border-right">
+                      <div class="description-block">
+                        <h5 class="description-header" id="personel_id"></h5>
+                        <span class="description-text">Personel ID</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-4 border-right">
+                      <div class="description-block">
+                        <h5 class="description-header" id="meslek"></h5>
+                        <span class="description-text">MESLEK</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="description-block">
+                        <h5 class="description-header" id="personel_takim"></h5>
+                        <span class="description-text">Takımı</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-4">
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <p class="custom-p-style" id="personel_ad_soyad_12">
+                    Gelecek 12 Ay Sonraki Tahmini Ürün Miktar Performansı
+                  </p>
+                  <h3 id="sayi_12"></h3>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-chart-pie"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Aylık Veri Grafiği</h3>
+                </div>
+                <div class="card-body">
+                  <canvas id="monthlyChart" width="550" height="210"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Verileri tanımlayın
+        var months = ["Aralık", "Ocak", "Şubat", "Mart", "Nisan", "Mayıs"];
+
+        // Chart.js ile çizgi grafiği oluşturma
+        var ctx = document.getElementById("monthlyChart").getContext("2d");
+        var myChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: months,
+            datasets: [
+              {
+                label: "Sayılar",
+                data: [], // Verileri burada boş bırakıyoruz ve AJAX isteği ile dolduracağız
+                backgroundColor: "rgba(54, 162, 235, 0.2)", // Arkaplan rengi (isteğe bağlı)
+                borderColor: "rgba(54, 162, 235, 1)", // Çizgi rengi
+                borderWidth: 2,
+                pointBackgroundColor: "rgba(54, 162, 235, 1)", // Nokta rengi
+                pointRadius: 5,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+        var urlParams = new URLSearchParams(window.location.search);
+        var personel_id = urlParams.get("personel_id");
+        // AJAX isteği yapma
+        $.ajax({
+          url: "http://localhost:3000/api/getUrunGelecekAnalizi/" + personel_id,
+          method: "GET",
+          success: function (response) {
+            if (response.success) {
+              var data = response.data;
+
+              // Veritabanından gelen en son ayı alın
+              var lastMonth = months[months.length - 1]; // Örneğin: "Mayıs"
+
+              // En son ayı bir Date nesnesine dönüştürün
+              var monthNames = [
+                "Ocak",
+                "Şubat",
+                "Mart",
+                "Nisan",
+                "Mayıs",
+                "Haziran",
+                "Temmuz",
+                "Ağustos",
+                "Eylül",
+                "Ekim",
+                "Kasım",
+                "Aralık",
+              ];
+              var lastMonthNumber = monthNames.indexOf(lastMonth);
+              var lastMonthYear = data.u_mayis_24 ? 2024 : 2023; // Veritabanından gelen yılı alın
+              var lastMonthDate = new Date(lastMonthYear, lastMonthNumber);
+
+              // En son aydan 6 ve 12 ay sonrasını hesaplayın
+              var sixMonthsLater = new Date(
+                lastMonthDate.setMonth(lastMonthDate.getMonth() + 6)
+              );
+              var twelveMonthsLater = new Date(
+                lastMonthDate.setMonth(lastMonthDate.getMonth() + 6)
+              );
+
+              // Ay isimlerini ve yılları hesaplayın
+              var sixMonthsLaterName =
+                monthNames[sixMonthsLater.getMonth()] +
+                " " +
+                sixMonthsLater.getFullYear();
+              var twelveMonthsLaterName =
+                monthNames[twelveMonthsLater.getMonth()] +
+                " " +
+                twelveMonthsLater.getFullYear();
+
+              // Ay isimlerini ve tahmini performansları grafiğe ekleyin
+              myChart.data.labels.push(
+                sixMonthsLaterName,
+                twelveMonthsLaterName
+              );
+              myChart.data.datasets[0].data = [
+                data.u_aralik_23,
+                data.u_ocak_24,
+                data.u_subat_24,
+                data.u_mart_24,
+                data.u_nisan_24,
+                data.u_mayis_24,
+                data.tahmini_6_ay_sonrasi_performans,
+                data.tahmini_12_ay_sonrasi_performans,
+              ];
+
+              myChart.update(); // Grafiği güncelle
+            }
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Bootstrap 4 -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AdminLTE CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.min.css"
+      integrity="sha512-IuO+tczf4J43RzbCMEFggCWW5JuX78IrCJRFFBoQEXNvGI6gkUw4OjuwMidiS4Lm9Q2lILzpJwZuMWuSEeT9UQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"
+      integrity="sha512-KBeR1NhClUySj9xBB0+KRqYLPkM6VvXiiWaSz/8LCQNdRpUm38SWUrj0ccNDNSkwCD9qPA4KobLliG26yPppJA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css"
+    />
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <title>LC Waikiki</title>
+    <script>
+      $(document).ready(function () {
+        $.ajax({
+          url: "http://localhost:3000/api/getMaxMinUrunPerformans",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            if (response.success) {
+              // Veriyi alınan yanıta göre ayarla
+              const highestPerformer = response.data[0];
+              const lowestPerformer = response.data[1];
+
+              const highestPerformerLink = $("#highest-urun-link");
+              const lowestPerformerLink = $("#lowest-urun-link");
+
+              $("#highestUrunName").text(highestPerformer.personel_ad_soyad);
+              $("#highestUrunMeslek").text(highestPerformer.meslek_adi);
+
+              $("#highestUrunId").text(highestPerformer.personel_id);
+              $("#highestUrunPerformance").text(
+                "%" + highestPerformer.urun_genel_performans
+              );
+              $("#highestUrunTeam").text(highestPerformer.takim_ad);
+
+              $("#lowestUrunName").text(lowestPerformer.personel_ad_soyad);
+              $("#lowestUrunMeslek").text(lowestPerformer.meslek_adi);
+              $("#lowestUrunId").text(lowestPerformer.personel_id);
+              $("#lowestUrunPerformance").text(
+                "%" + lowestPerformer.urun_genel_performans
+              );
+              $("#lowestUrunTeam").text(lowestPerformer.takim_ad);
+              highestPerformerLink.attr(
+                "href",
+                "/urun_gelecek_analizi.html?personel_id=" +
+                  highestPerformer.personel_id
+              );
+
+              lowestPerformerLink.attr(
+                "href",
+                "/urun_gelecek_analizi.html?personel_id=" +
+                  lowestPerformer.personel_id
+              );
+            }
+          },
+          error: function (error) {
+            console.error(error);
+            alert("Verileri getirme hatası");
+          },
+        });
+        $.ajax({
+          url: "http://localhost:3000/api/getMaxMinTurPerformans",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            if (response.success) {
+              // Veriyi alınan yanıta göre ayarla
+              const highestPerformer = response.data[0];
+              const lowestPerformer = response.data[1];
+
+              const highestPerformerLink = $("#highest-tur-link");
+              const lowestPerformerLink = $("#lowest-tur-link");
+
+              $("#highestTurName").text(highestPerformer.personel_ad_soyad);
+              $("#highestTurMeslek").text(highestPerformer.meslek_adi);
+
+              $("#highestTurId").text(highestPerformer.personel_id);
+              $("#highestTurPerformance").text(
+                "%" + highestPerformer.tur_genel_performans
+              );
+              $("#highestTurTeam").text(highestPerformer.takim_ad);
+
+              $("#lowestTurName").text(lowestPerformer.personel_ad_soyad);
+              $("#lowestTurMeslek").text(lowestPerformer.meslek_adi);
+              $("#lowestTurId").text(lowestPerformer.personel_id);
+              $("#lowestTurPerformance").text(
+                "%" + lowestPerformer.tur_genel_performans
+              );
+              $("#lowestTurTeam").text(lowestPerformer.takim_ad);
+              highestPerformerLink.attr(
+                "href",
+                "/tur_gelecek_analizi.html?personel_id=" +
+                  highestPerformer.personel_id
+              );
+
+              lowestPerformerLink.attr(
+                "href",
+                "/tur_gelecek_analizi.html?personel_id=" +
+                  lowestPerformer.personel_id
+              );
+            }
+          },
+          error: function (error) {
+            console.error(error);
+            alert("Verileri getirme hatası");
+          },
+        });
+      });
+    </script>
+  </head>
+  <body
+    class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed"
+  >
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="/index.html" class="brand-link text-center">
+        <span class="brand-text">LC Waikiki</span>
+      </a>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar User Panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex justify-content-center">
+          <div class="image">
+            <img
+              src="/52.jpg"
+              class="img-circle elevation-2"
+              alt="User Image"
+              class="admin_img"
+            />
+          </div>
+          <div class="info">
+            <a href="#" class="d-block"></a>
+          </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul
+            class="nav nav-pills nav-sidebar flex-column"
+            data-widget="treeview"
+            role="menu"
+            data-accordion="false"
+          >
+            <!-- Rezervasyon Accordion -->
+            <li class="nav-item has-treeview mb-3">
+              <a href="/urun_performans_goruntule.html" class="nav-link">
+                <i class="nav-icon fa-solid fa-shirt"></i>
+                <p>Ürün Performansı</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview mb-3">
+              <a href="/tur_performans_goruntule.html" class="nav-link">
+                <i class="nav-icon fa-solid fa-flag-checkered"></i>
+                <p>Tur Performansı</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview mb-3">
+              <a href="/takim_performans_goruntule.html" class="nav-link">
+                <i class="nav-icon fa-solid fa-people-group"></i>
+                <p>Takım Performansı</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview mb-3">
+              <a
+                href="/personelin_sahte_rapor_alma_analizi.html"
+                class="nav-link"
+              >
+                <i class="nav-icon fa-solid fa-hospital-user"></i>
+                <p>Personelin Sahte Rapor Alma Analizi</p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-12 text-center">
+              <h1>İstatistikler</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="content">
+        <div class="contaner-fluid">
+          <div class="row">
+            <div class="col-lg-3 col-md-6">
+              <div class="card card-primary card-outline">
+                <div class="card-header text-center">
+                  Ürün Performansı En Yüksek Personel
+                </div>
+                <div class="card-body box-profile">
+                  <div class="text-center">
+                    <img
+                      class="profile-user-img img-fluid img-circle"
+                      src="/Admin.png"
+                      alt="User profile picture"
+                    />
+                  </div>
+                  <h3
+                    class="profile-username text-center"
+                    id="highestUrunName"
+                  ></h3>
+                  <p class="text-muted text-center" id="highestUrunMeslek"></p>
+                  <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                      <b>Personel ID</b>
+                      <a class="float-right" id="highestUrunId"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Genel Ürün Performansı</b>
+                      <a class="float-right" id="highestUrunPerformance"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Takımı</b>
+                      <a class="float-right" id="highestUrunTeam"></a>
+                    </li>
+                  </ul>
+                  <a
+                    href=""
+                    id="highest-urun-link"
+                    class="btn btn-primary btn-block"
+                    ><b>Analiz Et</b></a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="card card-primary card-outline">
+                <div class="card-header">
+                  Ürün Performansı En Düşük Personel
+                </div>
+                <div class="card-body box-profile">
+                  <div class="text-center">
+                    <img
+                      class="profile-user-img img-fluid img-circle"
+                      src="/personel1.png"
+                      alt="User profile picture"
+                    />
+                  </div>
+                  <h3
+                    class="profile-username text-center"
+                    id="lowestUrunName"
+                  ></h3>
+                  <p class="text-muted text-center" id="lowestUrunMeslek"></p>
+                  <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                      <b>Personel ID</b>
+                      <a class="float-right" id="lowestUrunId"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Genel Ürün Performansı</b>
+                      <a class="float-right" id="lowestUrunPerformance"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Takımı</b>
+                      <a class="float-right" id="lowestUrunTeam"></a>
+                    </li>
+                  </ul>
+                  <a
+                    href="#"
+                    class="btn btn-primary btn-block"
+                    id="lowest-urun-link"
+                    ><b>Analiz Et</b></a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="card card-primary card-outline">
+                <div class="card-header text-center">
+                  Tur Performansı En Yüksek Personel
+                </div>
+                <div class="card-body box-profile">
+                  <div class="text-center">
+                    <img
+                      class="profile-user-img img-fluid img-circle"
+                      src="/personel2.png"
+                      alt="User profile picture"
+                    />
+                  </div>
+                  <h3
+                    class="profile-username text-center"
+                    id="highestTurName"
+                  ></h3>
+                  <p class="text-muted text-center" id="highestTurMeslek"></p>
+                  <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                      <b>Personel ID</b>
+                      <a class="float-right" id="highestTurId"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Genel Tur Performansı</b>
+                      <a class="float-right" id="highestTurPerformance"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Takımı</b>
+                      <a class="float-right" id="highestTurTeam"></a>
+                    </li>
+                  </ul>
+                  <a
+                    href=""
+                    id="highest-tur-link"
+                    class="btn btn-primary btn-block"
+                    ><b>Analiz Et</b></a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="card card-primary card-outline">
+                <div class="card-header">Tur Performansı En Düşük Personel</div>
+                <div class="card-body box-profile">
+                  <div class="text-center">
+                    <img
+                      class="profile-user-img img-fluid img-circle"
+                      src="/personel1.png"
+                      alt="User profile picture"
+                    />
+                  </div>
+                  <h3
+                    class="profile-username text-center"
+                    id="lowestTurName"
+                  ></h3>
+                  <p class="text-muted text-center" id="lowestTurMeslek"></p>
+                  <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                      <b>Personel ID</b>
+                      <a class="float-right" id="lowestTurId"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Genel Tur Performansı</b>
+                      <a class="float-right" id="lowestTurPerformance"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Takımı</b>
+                      <a class="float-right" id="lowestTurTeam"></a>
+                    </li>
+                  </ul>
+                  <a
+                    href="#"
+                    class="btn btn-primary btn-block"
+                    id="lowest-tur-link"
+                    ><b>Analiz Et</b></a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Aylara Göre Ürün Performansı</h3>
+                </div>
+                <div class="card-body">
+                  <canvas id="productPerformanceChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Aylara Göre Tur Performansı</h3>
+                </div>
+                <div class="card-body">
+                  <canvas id="productPerformanceTurChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      fetch("http://localhost:3000/api/getMaxMinUrunPerformansChart")
+        .then((response) => response.json())
+        .then((data) => {
+          // Belirli bir tarihi al (Mayıs 2024) ve 6 ve 12 ay sonrasını hesapla
+          let currentDate = new Date("2024-05-01");
+          const sixMonthsLater = new Date(
+            currentDate.setMonth(currentDate.getMonth() + 6)
+          );
+          currentDate = new Date("2024-05-01"); // currentDate'i sıfırla
+          const twelveMonthsLater = new Date(
+            currentDate.setMonth(currentDate.getMonth() + 12)
+          );
+
+          // Tarihleri ay-yıl formatına dönüştür
+          const formatMonthYear = (date) => {
+            const months = [
+              "Ocak",
+              "Şubat",
+              "Mart",
+              "Nisan",
+              "Mayıs",
+              "Haziran",
+              "Temmuz",
+              "Ağustos",
+              "Eylül",
+              "Ekim",
+              "Kasım",
+              "Aralık",
+            ];
+            const month = months[date.getMonth()]; // JavaScript ayları 0'dan başlatır
+            const year = date.getFullYear();
+            return `${month} ${year}`;
+          };
+
+          // Veriyi alınan yanıta göre ayarla
+          const labels = [
+            "Aralık 23",
+            "Ocak 24",
+            "Şubat 24",
+            "Mart 24",
+            "Nisan 24",
+            "Mayıs 24",
+            formatMonthYear(sixMonthsLater),
+            formatMonthYear(twelveMonthsLater),
+          ];
+          const datasets = data.data.map((item) => {
+            return {
+              label: `Personel ${item.personel_id}`,
+              data: [
+                item.u_aralik_23,
+                item.u_ocak_24,
+                item.u_subat_24,
+                item.u_mart_24,
+                item.u_nisan_24,
+                item.u_mayis_24,
+                item.tahmini_6_ay_sonrasi_performans,
+                item.tahmini_12_ay_sonrasi_performans,
+              ],
+              fill: false,
+              borderColor:
+                "#" + Math.floor(Math.random() * 16777215).toString(16), // Rastgele renk oluştur
+            };
+          });
+
+          // Grafik için veri yapısı
+          const chartData = {
+            labels: labels,
+            datasets: datasets,
+          };
+
+          const config = {
+            type: "line",
+            data: chartData,
+            options: {
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                  },
+                },
+                y: {
+                  title: {
+                    display: true,
+                  },
+                },
+              },
+            },
+          };
+
+          // Grafik oluştur
+          const myChart = new Chart(
+            document.getElementById("productPerformanceChart"),
+            config
+          );
+        })
+        .catch((error) => console.error("Error:", error));
+
+      fetch("http://localhost:3000/api/getMaxMinTurPerformansChart")
+        .then((response) => response.json())
+        .then((data) => {
+          // Belirli bir tarihi al (Mayıs 2024) ve 6 ve 12 ay sonrasını hesapla
+          let currentDate = new Date("2024-05-01");
+          const sixMonthsLater = new Date(
+            currentDate.setMonth(currentDate.getMonth() + 6)
+          );
+          currentDate = new Date("2024-05-01"); // currentDate'i sıfırla
+          const twelveMonthsLater = new Date(
+            currentDate.setMonth(currentDate.getMonth() + 12)
+          );
+
+          // Tarihleri ay-yıl formatına dönüştür
+          const formatMonthYear = (date) => {
+            const months = [
+              "Ocak",
+              "Şubat",
+              "Mart",
+              "Nisan",
+              "Mayıs",
+              "Haziran",
+              "Temmuz",
+              "Ağustos",
+              "Eylül",
+              "Ekim",
+              "Kasım",
+              "Aralık",
+            ];
+            const month = months[date.getMonth()]; // JavaScript ayları 0'dan başlatır
+            const year = date.getFullYear();
+            return `${month} ${year}`;
+          };
+
+          // Veriyi alınan yanıta göre ayarla
+          const labels = [
+            "Aralık 23",
+            "Ocak 24",
+            "Şubat 24",
+            "Mart 24",
+            "Nisan 24",
+            "Mayıs 24",
+            formatMonthYear(sixMonthsLater),
+            formatMonthYear(twelveMonthsLater),
+          ];
+          const datasets = data.data.map((item) => {
+            return {
+              label: `Personel ${item.personel_id}`,
+              data: [
+                item.t_aralik_23,
+                item.t_ocak_24,
+                item.t_subat_24,
+                item.t_mart_24,
+                item.t_nisan_24,
+                item.t_mayis_24,
+                item.tahmini_6_ay_sonrasi_performans,
+                item.tahmini_12_ay_sonrasi_performans,
+              ],
+              fill: false,
+              borderColor:
+                "#" + Math.floor(Math.random() * 16777215).toString(16), // Rastgele renk oluştur
+            };
+          });
+
+          // Grafik için veri yapısı
+          const chartData = {
+            labels: labels,
+            datasets: datasets,
+          };
+
+          const config = {
+            type: "line",
+            data: chartData,
+            options: {
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                  },
+                },
+                y: {
+                  title: {
+                    display: true,
+                  },
+                },
+              },
+            },
+          };
+
+          // Grafik oluştur
+          const myChart = new Chart(
+            document.getElementById("productPerformanceTurChart"),
+            config
+          );
+        })
+        .catch((error) => console.error("Error:", error));
+    </script>
+  </body>
+</html>
